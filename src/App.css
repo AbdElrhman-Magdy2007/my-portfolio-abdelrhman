@@ -1,0 +1,142 @@
+/* استيراد الخطوط و Tailwind كما في الكود الأصلي */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 11.2%; /* #0F172A - slate-900 */
+    --foreground: 210 40% 98%; /* #F1F5F9 - slate-100 */
+    --card: 217 33% 17.5%; /* #1E293B - slate-800 */
+    --card-foreground: 210 40% 98%; /* #F1F5F9 - slate-100 */
+    --primary: 217 91% 60%; /* #3B82F6 - blue-500 */
+    --primary-foreground: 222 47% 11.2%; /* #0F172A - slate-900 */
+    --secondary: 160 84% 39%; /* #10B981 - emerald-500 */
+    --secondary-foreground: 222 47% 11.2%; /* #0F172A - slate-900 */
+    --muted: 215 19% 35%; /* #475569 - slate-600 */
+    --muted-foreground: 215 20.2% 65.1%; /* #94A3B8 - slate-400 */
+    --accent: 215 19% 35%; /* #475569 - slate-600 */
+    --accent-foreground: 210 40% 98%; /* #F1F5F9 - slate-100 */
+    --border: 215 19% 35%; /* #475569 - slate-600 */
+    --radius: 0.5rem;
+  }
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: hsl(var(--background)); /* خلفية داكنة */
+  color: hsl(var(--foreground)); /* نص فاتح للتباين */
+  min-height: 100vh; /* لضمان تغطية الشاشة */
+  transition: background-color 0.3s ease, color 0.3s ease; /* تحول سلس */
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter, transform;
+  transition: filter 300ms ease, transform 300ms ease;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 1.5em hsl(var(--primary)/0.7)); /* ظل متوهج بلون أساسي */
+  transform: scale(1.05); /* تكبير طفيف عند التمرير */
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 1.5em hsl(var(--secondary)/0.7)); /* ظل بلون ثانوي */
+  transform: scale(1.05);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+  background-color: hsl(var(--card)/0.95); /* خلفية البطاقة داكنة */
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border)/0.5); /* حدود خفيفة */
+  border-radius: var(--radius); /* زوايا مستديرة */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* ظل ناعم */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px); /* تحريك طفيف عند التمرير */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.read-the-docs {
+  color: hsl(var(--muted-foreground)); /* لون نص خافت مناسب للوضع الليلي */
+  transition: color 0.3s ease;
+}
+
+.read-the-docs:hover {
+  color: hsl(var(--primary)); /* لون أساسي عند التمرير */
+}
+
+/* تحسينات إضافية للوضع الليلي */
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-lg bg-card/10 border border-border/50 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300;
+  }
+
+  .sparkle {
+    position: absolute;
+    pointer-events: none;
+    background: linear-gradient(135deg, hsl(var(--primary)/0.8), hsl(var(--secondary)/0.6));
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    animation: sparkle-fade 0.7s forwards;
+  }
+
+  @keyframes sparkle-fade {
+    0% { transform: scale(0); opacity: 0.9; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+}
+
+/* تحسينات التمرير */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary)/0.5) hsl(var(--background));
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--primary)/0.5);
+  border-radius: 10px;
+  border: 2px solid hsl(var(--background));
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--primary)/0.7);
+}

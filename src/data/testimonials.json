@@ -1,0 +1,24 @@
+
+[
+  {
+    "id": 1,
+    "quote": "Abdelrahman's expertise in Next.js turned our vision into a flawless reality. His work exceeded our expectations in every way.",
+    "author": "Sarah Lee",
+    "position": "CEO, TechVision",
+    "avatar": "/placeholder.svg"
+  },
+  {
+    "id": 2,
+    "quote": "His attention to detail and speed of delivery were unmatched! The app he built for us has significantly increased our customer engagement.",
+    "author": "Ahmed Khan",
+    "position": "CTO, DigitalFlow",
+    "avatar": "/placeholder.svg"
+  },
+  {
+    "id": 3,
+    "quote": "A game-changer who elevated our online presence. The website he created has helped us generate 40% more leads.",
+    "author": "Emily Chen",
+    "position": "Product Manager, GrowthLabs",
+    "avatar": "/placeholder.svg"
+  }
+]

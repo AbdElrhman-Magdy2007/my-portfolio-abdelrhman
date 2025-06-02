@@ -1,0 +1,37 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "title": "Modern Admin Dashboard",
+      "description": "A modern, responsive Admin Dashboard built with React, TypeScript, Tailwind CSS, and Vite. Features include dynamic charts using Recharts, toast notifications with Sonner, date handling via date-fns, and reusable UI components from Shadcn/UI. The project follows a mobile-first design and ensures fast performance with clean, modular code.",
+      "image": "https://i.postimg.cc/fRgbtk2S/Screenshot-2025-05-06-161917.png",
+      "tags": ["React", "TypeScript", "Tailwind CSS", "Vite", "Shadcn/UI", "Lucide Icons", "Recharts", "Sonner"],
+      "link": "/projects/ecommerce",
+      "demoUrl": "https://admin-dashboard-sftf.vercel.app",
+      "githubUrl": "https://github.com/AbdElrhman-Magdy2007/Admin-Dashboard",
+      "featured": true
+    },
+    {
+      "id": "2",
+      "title": "E-learning Platform – React + TypeScript Frontend",
+      "description": "A modern and responsive E-learning platform built with React, TypeScript, and Tailwind CSS. The platform includes pages like Home, Courses, Categories, Instructors, Pricing, and Authentication (Signup & Login). It features reusable components, clean layouts, and a mobile-first approach. The project showcases my skills in front-end development, offering a seamless user experience with performance optimization.",
+      "image": "https://i.postimg.cc/Jn9svtVB/Screenshot-2025-05-08-152206.png",
+      "tags": ["TypeScript", "Tailwind CSS", "Framer Motion", "React", "Shadcn/UI", "Recharts"],
+      "link": "/projects/portfolio",
+      "demoUrl": "https://e-learning-platform-tawny.vercel.app",
+      "githubUrl": "https://github.com/AbdElrhman-Magdy2007/E-learning_Platform",
+      "featured": true
+    },
+    {
+      "id": "3",
+      "title": "Responsive Hotel Booking App UI – React, TypeScript & Tailwind",
+      "description": "This is a modern, responsive hotel booking web application built with React, TypeScript, and Tailwind CSS. The platform features a clean and dynamic user interface with smooth animations powered by Framer Motion. Key components include a hotel search form, destination highlights, and detailed hotel cards. The UI is fully responsive and optimized for desktop, tablet, and mobile. The project focuses on performance, interactivity, and a seamless user experience.",
+      "image": "https://i.postimg.cc/KcBj4GhJ/1.png",
+      "tags": ["React", "Node.js", "Socket.IO", "React.js", "Express.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Shadcn/UI"],
+      "link": "/projects/task-manager",
+      "demoUrl": "https://booking-app-xgji.vercel.app",
+      "githubUrl": "https://github.com/AbdElrhman-Magdy2007/Booking-App",
+      "featured": true
+    }
+  ]
+}

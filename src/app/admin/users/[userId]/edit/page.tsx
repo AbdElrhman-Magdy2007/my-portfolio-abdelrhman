@@ -1,9 +1,9 @@
+"use server";
+
 import { getUser, getUsers } from "@/app/server/db/users";
 import EditUserForm from "@/components/edit-user-form";
 import { Pages, Routes } from "@/constants/enums";
 import { redirect } from "next/navigation";
-
-export const dynamic = 'force-dynamic';
 
 // Generate static parameters for paths
 export async function generateStaticParams() {

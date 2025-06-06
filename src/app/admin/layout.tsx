@@ -1,20 +1,27 @@
 "use server";
 
-import { UserRole } from "@prisma/client";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import clsx from "clsx";
-import Link from "next/link";
-import { authOptions } from "../server/auth";
-import AdminTabs from "./_components/AdminTabs";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
+import { Sidebar } from "./_components/Sidebar";
+import { Header } from "./_components/Header";
+import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-// Helper function to ensure admin access
+// Define UserRole enum locally
+enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN"
+}
+
+// Ensure admin access middleware
 async function ensureAdminAccess() {
   const session = await getServerSession(authOptions);
-  if (!session?.user || session.user.role !== UserRole.ADMIN) {
-    redirect("/auth/login");
+  if (!session || session.user.role !== UserRole.ADMIN) {
+    redirect("/auth/signin");
   }
-  return session;
 }
 
 // Admin layout component for rendering admin dashboard
@@ -23,46 +30,27 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Verify admin access
   await ensureAdminAccess();
+  const user = await getCurrentUser();
 
   return (
-    <div className={clsx("flex flex-col min-h-screen bg-background dark", "transition-colors duration-300")}>
-      {/* Header */}
-      <header
-        className={clsx(
-          "glass-card",
-          "supports-[backdrop-filter]:backdrop-blur-md",
-          "shadow-md border-b border-border/50",
-          "py-4"
-        )}
-        aria-label="Admin Dashboard Header"
-      >
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1
-            className={clsx(
-              "text-2xl sm:text-3xl font-heading font-bold text-gradient-primary animate-reveal-text pb-16",
-              "mb-4 text-center"
-            )}
-          >
-            {/* Admin Dashboard */}
-          </h1>
-          <AdminTabs />
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main
-        className={clsx(
-          "flex-grow container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8",
-          "text-foreground"
-        )}
-      >
-        <div className="relative glass-card p-6 rounded-xl">
-          {children}
-        </div>
-      </main>
-
+    <div className="min-h-screen bg-gray-50">
+      <Suspense fallback={<LoadingSpinner />}>
+        <Sidebar />
+      </Suspense>
+      <div className="lg:pl-72">
+        <Suspense fallback={<LoadingSpinner />}>
+          <Header user={user} />
+        </Suspense>
+        <main className="py-10">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<LoadingSpinner />}>
+              {children}
+            </Suspense>
+          </div>
+        </main>
+      </div>
+      <Toaster />
     </div>
   );
 }

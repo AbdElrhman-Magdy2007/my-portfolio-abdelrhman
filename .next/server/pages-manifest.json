@@ -1,0 +1,13 @@
+{
+  "/_app": "pages/_app.js",
+  "/AddProject": "pages/AddProject.js",
+  "/Index": "pages/Index.js",
+  "/_error": "pages/_error.js",
+  "/Profile": "pages/Profile.js",
+  "/Projects": "pages/Projects.js",
+  "/SignInnn": "pages/SignInnn.js",
+  "/SignUppp": "pages/SignUppp.js",
+  "/_document": "pages/_document.js",
+  "/Settingsss": "pages/Settingsss.js",
+  "/NotFound": "pages/NotFound.js"
+}

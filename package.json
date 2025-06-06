@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.9.1",
+    "@auth/prisma-adapter": "^2.9.1",
     "@emailjs/browser": "^4.4.1",
     "@formatjs/intl-localematcher": "^0.6.1",
     "@hookform/resolvers": "^3.3.4",
@@ -40,8 +41,10 @@
     "@radix-ui/react-toast": "^1.2.14",
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@types/bcryptjs": "^2.4.6",
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.6.1",
     "clsx": "^2.1.1",

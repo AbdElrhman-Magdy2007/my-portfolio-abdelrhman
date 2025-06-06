@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 // import Header from '@/components/Header';
 import { buttonVariants } from '@/components/ui/button';
 import { Pages, Routes } from '@/constants/enums';
 import Link from 'next/link';
 import Form from './_components/Form';
+import ParticleBackground from './_components/ParticleBackground';
 
 // Fallback component in case Form fails to load
 const FallbackForm: React.FC = () => (
@@ -15,99 +16,13 @@ const FallbackForm: React.FC = () => (
   </div>
 );
 
-// Particle background component
-const ParticleBackground: React.FC = () => {
-  const particles = Array.from({ length: 15 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 6 + 4,
-    duration: Math.random() * 6 + 6,
-    delay: Math.random() * 4,
-    opacity: Math.random() * 0.3 + 0.3,
-  }));
-
-  const particleVariants = {
-    animate: (i: number) => ({
-      x: [particles[i].x, particles[i].x + (Math.random() * 60 - 30), particles[i].x],
-      y: [particles[i].y, particles[i].y + (Math.random() * 60 - 30), particles[i].y],
-      opacity: [0, particles[i].opacity, 0],
-      scale: [0, 1.2, 0],
-      rotate: [0, 180, 360],
-      transition: {
-        duration: particles[i].duration,
-        delay: particles[i].delay,
-        repeat: Infinity,
-        ease: 'easeInOut',
-        times: [0, 0.5, 1],
-      },
-    }),
-    pulse: {
-      scale: [1, 1.3, 1],
-      opacity: [0.3, 0.6, 0.3],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      },
-    },
-  };
-
-  return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      {particles.map((particle) => (
-        <motion.div
-          key={particle.id}
-          className="particle animate-glow"
-          style={{
-            width: particle.size,
-            height: particle.size,
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            background: 'linear-gradient(135deg, hsl(215 91% 70% / 0.5), hsl(271 81% 75% / 0.5))',
-          }}
-          variants={particleVariants}
-          animate={['animate', 'pulse']}
-          custom={particle.id}
-        />
-      ))}
-      {/* Pulsating Gradient Wave */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(45deg, transparent, hsl(215 91% 70% / 0.2), transparent)',
-        }}
-        animate={{
-          opacity: [0.1, 0.2, 0.1],
-          x: [-30, 30, -30],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-      {/* Static Sparkle Bursts */}
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div
-          key={`sparkle-${i}`}
-          className="sparkle"
-          style={{
-            width: `${Math.random() * 3 + 3}px`,
-            height: `${Math.random() * 3 + 3}px`,
-            top: `${Math.random() * 80 + 10}%`,
-            left: `${Math.random() * 80 + 10}%`,
-            animation: `sparkle ${Math.random() * 0.5 + 1.2}s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 2}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
 export default function SignInPage() {
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -136,11 +51,26 @@ export default function SignInPage() {
   };
 
   const createSparkle = (x: number, y: number) => {
-    if (typeof window === 'undefined') return; // Skip if not in browser
+    if (!isMounted) return;
     const id = Date.now();
     setSparkles((prev) => [...prev, { id, x: x + Math.random() * 8 - 4, y: y + Math.random() * 8 - 4 }]);
     setTimeout(() => setSparkles((prev) => prev.filter((s) => s.id !== id)), 600);
   };
+
+  if (!isMounted) {
+    return (
+      <main className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-hidden dark">
+        <div className="w-full max-w-md sm:max-w-lg p-6 sm:p-8 glass-card border-gradient z-10">
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold mb-8 text-center text-blue-400">
+            Sign In
+          </h2>
+          <div className="min-h-[200px]">
+            <Form />
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-hidden dark">
@@ -198,7 +128,7 @@ export default function SignInPage() {
             background: 'linear-gradient(135deg, hsl(215 91% 70% / 0.8), hsl(271 81% 75% / 0.8))',
           }}
           initial={{ scale: 0, opacity: 1, rotate: 0 }}
-          animate={{ scale: 2, opacity: 0, rotate: 180 }}
+          animate={{ scale: 1, opacity: 0, rotate: 180 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         />
       ))}

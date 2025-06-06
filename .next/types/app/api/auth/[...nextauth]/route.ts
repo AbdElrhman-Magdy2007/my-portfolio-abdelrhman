@@ -1,4 +1,4 @@
-// File: C:\Users\raya\ShoppingCart\portfolio - Copy - Copy - Copy\src\app\api\auth\[...nextauth]\route.ts
+// File: C:\Users\raya\ShoppingCart\portfolio - Copy - Copy - Copy - Copy\src\app\api\auth\[...nextauth]\route.ts
 import * as entry from '../../../../../../src/app/api/auth/[...nextauth]/route.js'
 import type { NextRequest } from 'next/server.js'
 

@@ -3,7 +3,7 @@ import { LanguageType } from "@/i18n.config";
 import { DefaultSession, User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { login } from "./_actions/auth";
 import { JWT } from "next-auth/jwt";
 
@@ -40,7 +40,7 @@ declare module "next-auth/jwt" {
    Auth Options
 ===================== */
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token }) {
       if (!token.email) return token;
 
-      const user = await db.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { email: token.email },
       });
 

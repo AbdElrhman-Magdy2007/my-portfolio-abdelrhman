@@ -2,7 +2,7 @@
 "use server";
 
 import { Locale } from "@/i18n.config";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt"; // تستخدم لي تعقيد كلمات المرور
 import { Routes, Pages } from "@/constants/enums";
 import { revalidatePath } from "next/cache";
@@ -56,7 +56,7 @@ export const login = async (
 
   try {
     // جلب المستخدم باستخدام استعلام محسن
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: result.data.email },
       select: {
         id: true,
@@ -140,7 +140,7 @@ export const signup = async (
 
   try {
     // التحقق من وجود المستخدم مسبقًا باستعلام خفيف
-    const existingUser = await db.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: result.data.email },
       select: { id: true },
     });
@@ -155,7 +155,7 @@ export const signup = async (
 
     // تشفير كلمة المرور وإنشاء المستخدم مع id يدوي
     const hashedPassword = await bcrypt.hash(result.data.password, 10);
-    const createdUser = await db.user.create({
+    const createdUser = await prisma.user.create({
       data: {
         id: uuidv4(), // توليد UUID يدويًا باستخدام مكتبة uuid
         name: result.data.name,

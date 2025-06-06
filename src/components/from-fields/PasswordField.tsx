@@ -10,14 +10,14 @@ import { ValidationError } from "@/app/validations/auth";
 
 interface Props extends IFormField {
   error?: ValidationError | string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   onValidationChange?: (isValid: boolean) => void; // دالة لإبلاغ الوالد بحالة التحقق
-   value?: string;
-     name: string;
-  label?: string;
-  type: "number" | "text" | "email" | "password" | "date" | "time" | "datetime-local" | "checkbox" | "radio" | "select" | "textarea" | "hidden" | "tel" | "url";
   isArabic?: boolean;
+  value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  ariaLabel: string;
+  pattern: string;
+  autoFocus?: boolean;
 }
 
 const PasswordField = ({
@@ -29,6 +29,7 @@ const PasswordField = ({
   error,
   defaultValue,
   onValidationChange,
+  isArabic,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState(defaultValue || "");

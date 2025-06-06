@@ -1,10 +1,10 @@
 "use server";
 
 import { getUpdateProfileSchema } from "@/app/validations/profile";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { Pages, Routes } from "@/constants/enums";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/constants/enums";
 
 interface FormResponse {
   message?: string;
@@ -43,7 +43,7 @@ export const updateProfile = async (
   }
 
   try {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: data.email },
       select: { id: true, email: true, image: true },
     });
@@ -56,7 +56,7 @@ export const updateProfile = async (
       };
     }
 
-    await db.user.update({
+    await prisma.user.update({
       where: { email: user.email },
       data: {
         name: data.name,

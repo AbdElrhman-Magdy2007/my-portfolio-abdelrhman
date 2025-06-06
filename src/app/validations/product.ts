@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PackageOption } from "@prisma/client";
+import { PackageOption } from "@/constants/enums";
 
 // Centralized error messages for user-friendly feedback
 export const errorMessages = {

@@ -1,7 +1,7 @@
 "use server";
 
 import { Pages, Routes } from "@/constants/enums";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export const deleteUser = async (id: string) => {
@@ -15,7 +15,7 @@ export const deleteUser = async (id: string) => {
 
   try {
     // Delete user from database
-    await db.user.delete({
+    await prisma.user.delete({
       where: { id },
     });
 

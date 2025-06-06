@@ -1,4 +1,3 @@
-
 import { IFormField } from "@/app/types/app";
 import { Checkbox as ShadcnCheckbox } from "../ui/checkbox";
 import clsx from "clsx";
@@ -13,7 +12,7 @@ interface Props {
   required?: boolean; // إضافة دعم للحقل المطلوب
   onClick?: () => void;
   error?: string;
-  
+  autoFocus?: boolean;
 }
 
 /**

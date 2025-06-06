@@ -2,10 +2,9 @@
 
 import { cache } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { Pages, Routes } from "@/constants/enums";
 import { ProductWithRelations } from "@/app/types/product";
-import { Category } from "@prisma/client";
 import Form from "../../_components/Form";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,6 +16,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
 import clsx from "clsx";
+
+type Category = {
+  id: string;
+  name: string;
+  order: number;
+  products?: ProductWithRelations[];
+};
 
 // Constants
 const LOG_PREFIX = "[EditProductPage]";
@@ -103,7 +109,7 @@ const getProduct = cache(async (productId: string): Promise<ProductWithRelations
   }
 
   try {
-    const product = await db.product.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id: productId },
       include: {
         ProductTech: { select: { id: true, name: true } },

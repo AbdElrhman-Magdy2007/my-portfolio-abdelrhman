@@ -1,14 +1,13 @@
 {
-  "/AddProject": "pages/AddProject.html",
-  "/Index": "pages/Index.html",
-  "/NotFound": "pages/NotFound.html",
-  "/Profile": "pages/Profile.html",
-  "/Projects": "pages/Projects.html",
-  "/Settingsss": "pages/Settingsss.html",
-  "/SignInnn": "pages/SignInnn.html",
-  "/SignUppp": "pages/SignUppp.html",
-  "/_error": "pages/_error.js",
   "/_app": "pages/_app.js",
-  "/_document": "pages/_document.js",
-  "/404": "pages/404.html"
+  "/_error": "pages/_error.js",
+  "/AddProject": "pages/AddProject.js",
+  "/Index": "pages/Index.js",
+  "/Projects": "pages/Projects.js",
+  "/Settingsss": "pages/Settingsss.js",
+  "/NotFound": "pages/NotFound.js",
+  "/SignUppp": "pages/SignUppp.js",
+  "/Profile": "pages/Profile.js",
+  "/SignInnn": "pages/SignInnn.js",
+  "/_document": "pages/_document.js"
 }

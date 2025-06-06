@@ -1,10 +1,10 @@
 // app/menu-items/_actions/product.ts
 "use server";
 
-import { db } from "@/lib/prisma";
-import { Pages, Routes } from "@/constants/enums";
+import { prisma } from "@/lib/prisma";
+import { Pages, Routes, PackageOption } from "@/constants/enums";
 import { addProductSchema, ProductValidatedData } from "@/app/validations/product";
-import { PackageOption, ProductAddon, ProductTech } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 // Constants
@@ -30,8 +30,8 @@ interface ActionResponse {
 }
 
 interface ProductOptions {
-  productTechs: Partial<ProductTech>[];
-  productAddons: Partial<ProductAddon>[];
+  productTechs: { name: string }[];
+  productAddons: { name: PackageOption }[];
 }
 
 interface AddProductArgs {
@@ -283,7 +283,7 @@ export const addProduct = async (
     }
 
     // Create product
-    const product = await db.product.create({
+    const product = await prisma.product.create({
       data: {
         name,
         description,
@@ -419,7 +419,7 @@ export const updateProduct = async (
     });
 
     // Check if product exists
-    const product = await db.product.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id: args.productId },
     });
     if (!product) {
@@ -448,7 +448,7 @@ export const updateProduct = async (
     }
 
     // Update product in a transaction
-    const updatedProduct = await db.$transaction(async (tx) => {
+    const updatedProduct = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const productUpdate = await tx.product.update({
         where: { id: args.productId },
         data: {
@@ -509,7 +509,7 @@ export const deleteProduct = async (id: string): Promise<ActionResponse> => {
   console.log(`${LOG_PREFIX} [${requestId}] Processing deleteProduct for ID: ${id}`);
 
   try {
-    const product = await db.product.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id },
     });
     if (!product) {
@@ -520,7 +520,7 @@ export const deleteProduct = async (id: string): Promise<ActionResponse> => {
       };
     }
 
-    await db.product.delete({
+    await prisma.product.delete({
       where: { id },
     });
 

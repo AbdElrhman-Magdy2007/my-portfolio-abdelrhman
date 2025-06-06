@@ -163,3 +163,14 @@ export enum UserRole {
   ADMIN = "ADMIN",
   USER = "USER",
 }
+
+/**
+ * Package options for product addons.
+ */
+export enum PackageOption {
+  FullStack = "FullStack",
+  Backend = "Backend",
+  Frontend = "Frontend",
+  UI = "UI",
+  UX = "UX",
+}

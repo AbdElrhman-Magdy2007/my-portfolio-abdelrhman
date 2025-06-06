@@ -15,12 +15,12 @@
 //  );
 
 import { cache } from "@/lib/cache";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export const getCategories = cache(
   async () => {
     try {
-      const categories = await db.category.findMany({
+      const categories = await prisma.category.findMany({
         select: {
           id: true,
           name: true,

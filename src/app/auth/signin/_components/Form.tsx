@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useReducer, memo } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
-import { InputTypes, Pages } from '@/constants/enums';
+import { Pages, InputTypes } from '@/constants/enums';
 import useFormFields from '@/hooks/useFormFields';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
@@ -44,10 +44,7 @@ const LoginForm = memo(() => {
   const params = useParams();
 
   const { getFormFields } = useFormFields({ slug: Pages.LOGIN });
-  const formFields = getFormFields().map(field => ({
-    ...field,
-    type: field.type as InputTypes
-  }));
+  const formFields = getFormFields();
 
   const onSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -142,15 +139,15 @@ const LoginForm = memo(() => {
 
   const toastStyles = {
     error: {
-      color: '#F87171',
-      backgroundColor: 'hsl(217 33% 17.5% / 0.2)',
-      border: '1px solid hsl(3 81% 67% / 0.5)',
+      color: '#F87171', // red-400
+      backgroundColor: 'hsl(217 33% 17.5% / 0.2)', // slate-900/20
+      border: '1px solid hsl(3 81% 67% / 0.5)', // red-400/50
       borderRadius: '0.5rem',
       padding: '12px 16px',
       fontFamily: 'Inter, sans-serif',
-      fontSize: '0.875rem',
+      fontSize: '0.875rem', // text-sm
       fontWeight: 500,
-      boxShadow: '0 4px 12px hsl(215 91% 70% / 0.2)',
+      boxShadow: '0 4px 12px hsl(215 91% 70% / 0.2)', // shadow-blue-400/20
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -159,15 +156,15 @@ const LoginForm = memo(() => {
       overflow: 'hidden',
     },
     success: {
-      color: '#34D399',
-      backgroundColor: 'hsl(217 33% 17.5% / 0.2)',
-      border: '1px solid hsl(160 64% 43% / 0.5)',
+      color: '#34D399', // green-400
+      backgroundColor: 'hsl(217 33% 17.5% / 0.2)', // slate-900/20
+      border: '1px solid hsl(160 64% 43% / 0.5)', // green-400/50
       borderRadius: '0.5rem',
       padding: '12px 16px',
       fontFamily: 'Inter, sans-serif',
-      fontSize: '0.875rem',
+      fontSize: '0.875rem', // text-sm
       fontWeight: 500,
-      boxShadow: '0 4px 12px hsl(215 91% 70% / 0.2)',
+      boxShadow: '0 4px 12px hsl(215 91% 70% / 0.2)', // shadow-blue-400/20
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -199,9 +196,33 @@ const LoginForm = memo(() => {
     }),
   };
 
-  const handleValidationChange = (isValid: boolean) => {
-    setIsFormValid(isValid);
+  const toastVariants = {
+    hidden: { opacity: 0, x: 50, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: 'easeOut',
+        type: 'spring',
+        stiffness: 100,
+      },
+    },
+    exit: {
+      opacity: 0,
+      x: 50,
+      scale: 0.95,
+      transition: {
+        duration: 0.3,
+        ease: 'easeIn',
+      },
+    },
   };
+
+  function handleValidationChange(isValid: boolean): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <form
@@ -226,21 +247,55 @@ const LoginForm = memo(() => {
           >
             <FormFields
               {...field}
+              type={field.type === 'email' ? InputTypes.EMAIL : InputTypes.PASSWORD}
               label={field.name === 'email' ? 'Email' : 'Password'}
               placeholder={field.name === 'email' ? 'Enter your email' : 'Enter your password'}
+              pattern={field.type === 'email' ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' : '.*'}
               error={errors[field.name]?.[0]}
               disabled={isLoading}
               onValidationChange={handleValidationChange}
+              ariaLabel={field.label || field.name}
               className={clsx(
                 'w-full p-3 rounded-lg bg-slate-900/50 border border-slate-700',
                 'text-slate-300 placeholder-slate-500 focus:ring-2 focus:ring-blue-400',
                 'transition-all duration-200 hover:shadow-md hover:shadow-blue-400/20'
               )}
             />
+            {field.name === 'email' && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: (document.activeElement as HTMLInputElement)?.name === 'email' ? 0.3 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <motion.div
+                    key={`sparkle-field-${i}`}
+                    className="sparkle"
+                    style={{
+                      width: `${Math.random() * 2 + 2}px`,
+                      height: `${Math.random() * 2 + 2}px`,
+                      top: `${Math.random() * 100}%`,
+                      left: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      scale: [0, 1.5, 0],
+                      opacity: [0, 0.8, 0],
+                      rotate: [0, 180],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: Math.random() * 0.5,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
           </motion.div>
         ))}
       </div>
-
       <motion.div
         variants={fieldVariants}
         initial="hidden"
@@ -260,17 +315,32 @@ const LoginForm = memo(() => {
           onClick={(e) => createSparkle(e.clientX, e.clientY)}
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <Loader className="animate-spin h-5 w-5" />
-              Logging in...
-            </span>
+            <Loader className="w-5 h-5 animate-spin" />
           ) : (
             'Login'
           )}
         </Button>
       </motion.div>
+      {sparkles.map((sparkle) => (
+        <motion.div
+          key={sparkle.id}
+          className="sparkle absolute rounded-full"
+          style={{
+            left: sparkle.x,
+            top: sparkle.y,
+            width: 8,
+            height: 8,
+            background: 'linear-gradient(135deg, hsl(215 91% 70% / 0.8), hsl(271 81% 75% / 0.8))',
+          }}
+          initial={{ scale: 0, opacity: 1, rotate: 0 }}
+          animate={{ scale: 2, opacity: 0, rotate: 180 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        />
+      ))}
     </form>
   );
 });
+
+LoginForm.displayName = 'LoginForm';
 
 export default LoginForm;

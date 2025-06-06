@@ -19,12 +19,12 @@
 //  );
 
 import { cache } from "@/lib/cache";
-import { db } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 // جلب جميع المستخدمين مع التخزين المؤقت
 export const getUsers = cache(
   async () => {
-    const users = await db.user.findMany({
+    const users = await prisma.user.findMany({
       select: {
         id: true,
         name: true,
@@ -47,7 +47,7 @@ export const getUser = cache(
       throw new Error("Invalid userId provided");
     }
 
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
         id: true,

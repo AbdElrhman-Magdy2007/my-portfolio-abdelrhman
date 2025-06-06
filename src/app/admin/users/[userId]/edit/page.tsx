@@ -3,10 +3,12 @@ import EditUserForm from "@/components/edit-user-form";
 import { Pages, Routes } from "@/constants/enums";
 import { redirect } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 // Generate static parameters for paths
 export async function generateStaticParams() {
   const users = await getUsers();
-  return users.map((user) => ({ userId: user.id }));
+  return users.map((user: { id: string }) => ({ userId: user.id }));
 }
 
 // Edit user page

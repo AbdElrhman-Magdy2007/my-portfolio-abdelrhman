@@ -17,6 +17,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
 import clsx from "clsx";
 
+export const dynamic = 'force-dynamic';
+
 type Category = {
   id: string;
   name: string;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, ChangeEvent, useMemo } from "react";
-import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { PackageOption, InputTypes } from "@/constants/enums";
@@ -33,7 +32,15 @@ import {
 } from "lucide-react";
 import FormFields from "@/components/from-fields/FormFields";
 import { Prisma } from "@prisma/client";
+import { useFormState } from "react-dom";
 
+interface ActionResponse {
+  status: number;
+  message: string;
+  error?: Record<string, string>;
+  formData?: FormData;
+  pending?: boolean;
+}
 
 // Form values aligned with productSchema
 interface FormValues {
@@ -134,22 +141,18 @@ function Form({ categories, product }: FormProps) {
     formData: null,
   };
 
-  const [state, action, pending] = useActionState(
-    product
-      ? updateProduct.bind(null, {
-          productId: product.id,
-          options: { productTechs, productAddons },
-        })
-      : addProduct.bind(null, {
-          categoryId,
-          options: { productTechs, productAddons },
-        }),
-    initialState
+  const [state, formAction] = useFormState<ActionResponse, FormData>(
+    (prevState, formData) => addProduct({ categoryId, options: { productTechs, productAddons } }, prevState, formData),
+    {
+      message: "",
+      status: 0,
+      error: undefined
+    }
   );
 
   // Handle form submission feedback and page reload
   useEffect(() => {
-    if ((state.status === 201 || state.status === 200) && !pending) {
+    if ((state.status === 201 || state.status === 200) && !state.pending) {
       setIsSubmitting(true);
       toast.success(state.message || "Product saved successfully!", {
         icon: <CheckCircleIcon className="w-5 h-5 text-green-400" />,
@@ -176,7 +179,7 @@ function Form({ categories, product }: FormProps) {
       return () => clearTimeout(timer);
     }
 
-    if (state.message && state.status && !pending) {
+    if (state.message && state.status && !state.pending) {
       const isSuccess = state.status === 200 || state.status === 201;
       if (!isSuccess) {
         toast.error(state.message, {
@@ -213,7 +216,7 @@ function Form({ categories, product }: FormProps) {
         }
       }
     }
-  }, [state.status, state.message, state.error, pending, categories, router]);
+  }, [state.status, state.message, state.error, state.pending, categories, router]);
 
   const handleFieldChange = useCallback(
     (name: keyof FormValues) =>
@@ -317,7 +320,7 @@ function Form({ categories, product }: FormProps) {
     console.log(`[Form] FormData Keys:`, Array.from(formData.keys()));
     console.log(`[Form] FormData:`, formDataEntries);
 
-    action(formData);
+    formAction(formData);
   };
 
   useEffect(() => {
@@ -442,7 +445,7 @@ function Form({ categories, product }: FormProps) {
                       error={state?.error?.[field.name]}
                       value={formValues[field.name as keyof FormValues] ?? ""}
                       onChange={handleFieldChange(field.name as keyof FormValues)}
-                      disabled={pending}
+                      disabled={state.pending}
                       pattern={field.pattern}
                       ariaLabel={field.ariaLabel}
                       required={field.required}
@@ -531,7 +534,7 @@ function Form({ categories, product }: FormProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.7 }}
             >
-              <FormActions pending={pending} product={product} />
+              <FormActions pending={state.pending} product={product} />
             </motion.div>
           </motion.div>
         </motion.form>
@@ -623,7 +626,7 @@ const UploadImage = ({
 
 // FormActions Component
 interface FormActionsProps {
-  pending: boolean;
+  pending?: boolean;
   product?: ProductWithRelations;
 }
 

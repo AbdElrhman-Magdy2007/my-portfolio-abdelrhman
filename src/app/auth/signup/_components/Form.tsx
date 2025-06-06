@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useActionState } from 'react';
+import { useState, useEffect } from 'react';
+import { useFormState } from 'react-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
@@ -120,7 +121,7 @@ const CustomToast = ({ message, type, id }: { message: string; type: 'success' |
 
 function RegisterForm() {
   const router = useRouter();
-  const [state, action, pending] = useActionState(signup, initialState);
+  const [state, formAction] = useFormState(signup, initialState);
   const [lastToastMessage, setLastToastMessage] = useState<string | null>(null);
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const params = useParams();
@@ -177,7 +178,7 @@ function RegisterForm() {
 
   return (
     <form
-      action={action}
+      action={formAction}
       className={clsx(
         'space-y-6 w-full max-w-md mx-auto p-6 sm:p-8',
         'glass-card border-gradient animate-glow',
@@ -218,7 +219,7 @@ function RegisterForm() {
                     : undefined
                 }
                 value={fieldValue as string}
-                disabled={pending}
+                disabled={state.status === 0}
                 pattern={field.pattern ?? ""}
                 options={field.options}
                 className={clsx(
@@ -274,14 +275,14 @@ function RegisterForm() {
             'w-full font-medium rounded-lg shadow-md py-2 px-4 transition-all duration-200',
             'bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500',
             'text-white border-gradient',
-            pending && 'opacity-50 cursor-not-allowed'
+            state.status === 0 && 'opacity-50 cursor-not-allowed'
           )}
-          disabled={pending}
+          disabled={state.status === 0}
           onMouseEnter={(e) => createSparkle(e.clientX, e.clientY)}
           onClick={(e) => createSparkle(e.clientX, e.clientY)}
           aria-label="Register"
         >
-          {pending ? (
+          {state.status === 0 ? (
             <>
               <Loader className="w-5 h-5 animate-spin" aria-hidden="true" />
               <span>Registering...</span>

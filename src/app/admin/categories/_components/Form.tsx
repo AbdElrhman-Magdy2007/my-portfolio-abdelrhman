@@ -4,26 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { ValidationError } from "next/dist/compiled/amphtml-validator";
-import { useActionState, useEffect } from "react";
-import { addCategory } from "../_actions/category";
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
+import { addCategory, ActionResponse } from "../_actions/category";
 import { Loader } from "lucide-react";
 import clsx from "clsx";
 
-type InitialStateType = {
-  message?: string;
-  error?: ValidationError;
-  status?: number | null;
-};
-
-const initialState: InitialStateType = {
-  message: "",
-  error: {},
-  status: null,
-};
-
 function Form() {
-  const [state, action, pending] = useActionState(addCategory, initialState);
+  const [state, formAction] = useFormState<ActionResponse, FormData>(
+    (prevState, formData) => addCategory(prevState, formData),
+    {
+      message: "",
+      status: 0,
+      error: undefined
+    }
+  );
 
   useEffect(() => {
     if (state.message) {
@@ -31,28 +26,15 @@ function Form() {
         title: state.message,
         className: state.status === 201 ? "text-emerald-400" : "text-red-400",
       });
-      // Log the response from addCategory action
-      console.log("Category Action Response:", {
-        message: state.message,
-        status: state.status,
-        error: state.error,
-      });
     }
-  }, [state.message, state.status, state.error]);
-
-  // Handle form submission to log category name
-  const handleSubmit = async (formData: FormData) => {
-    const categoryName = formData.get("categoryName");
-    console.log("Submitted Category Name:", categoryName);
-    return await action(formData);
-  };
+  }, [state.message, state.status]);
 
   return (
     <div className={clsx(
       "glass-card p-6 border border-indigo-600/20 bg-slate-800/30",
       "rounded-xl animate-reveal-text delay-200"
     )}>
-      <form action={handleSubmit} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <div className="space-y-2">
           <Label
             htmlFor="categoryName"
@@ -78,28 +60,28 @@ function Form() {
             <Button
               type="submit"
               size="lg"
-              disabled={pending}
+              disabled={state.status === 201}
               className={clsx(
                 "btn-primary bg-indigo-600 hover:bg-indigo-500 text-white",
                 "flex items-center gap-2 animate-glow",
-                pending && "opacity-70 cursor-not-allowed"
+                state.status === 201 && "opacity-70 cursor-not-allowed"
               )}
             >
-              {pending ? (
+              {state.status === 201 ? (
                 <Loader className="animate-spin w-5 h-5" />
               ) : (
                 "Create"
               )}
             </Button>
           </div>
-          {state.error?.name && (
+          {state.error?.categoryName && (
             <p
               className={clsx(
                 "text-sm text-red-400 font-medium",
                 "animate-reveal-text delay-300"
               )}
             >
-              {state.error.name}
+              {state.error.categoryName}
             </p>
           )}
         </div>

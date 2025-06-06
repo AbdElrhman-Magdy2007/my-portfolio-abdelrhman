@@ -2,13 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { getCurrentUser } from "@/lib/session";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Sidebar } from "./_components/Sidebar";
 import { Header } from "./_components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { getCurrentUser } from "@/lib/session";
 
 // Define UserRole enum locally
 enum UserRole {

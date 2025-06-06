@@ -1,16 +1,19 @@
 'use client';
 
-import { useState, useRef, useCallback, useReducer, memo } from 'react';
+import { useState, useRef, useCallback, useReducer, memo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
-import { Pages, InputTypes } from '@/constants/enums';
+import { Pages, InputTypes, Routes } from '@/constants/enums';
 import useFormFields from '@/hooks/useFormFields';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import clsx from 'clsx';
-import { Loader } from 'lucide-react';
+import { Loader, CheckCircle, AlertCircle, X } from 'lucide-react';
 import FormFields from '@/components/from-fields/from-fieds';
+import { useFormState } from 'react-dom';
+import { login } from '@/app/server/_actions/auth';
+import { Locale } from '@/i18n.config';
 
 // Interface for form errors
 interface FormErrors {
@@ -33,6 +36,29 @@ const errorsReducer = (state: FormErrors, action: FormAction): FormErrors => {
   }
 };
 
+// Define state type
+interface FormState {
+  status: number;
+  message?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+  error?: Record<string, string[]> | string;
+  formData?: FormData;
+  className?: string;
+}
+
+const initialState: FormState = {
+  status: 0,
+  message: '',
+  error: undefined,
+  formData: undefined,
+  className: undefined
+};
+
 const LoginForm = memo(() => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -42,6 +68,17 @@ const LoginForm = memo(() => {
   const [errors, dispatchErrors] = useReducer(errorsReducer, {});
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const params = useParams();
+  const locale = (params?.locale as Locale) || 'en';
+  const [state, formAction] = useFormState<FormState, FormData>(
+    async (prevState: FormState, formData: FormData) => {
+      const credentials = {
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      };
+      return login(credentials, locale);
+    },
+    initialState
+  );
 
   const { getFormFields } = useFormFields({ slug: Pages.LOGIN });
   const formFields = getFormFields();
@@ -134,7 +171,7 @@ const LoginForm = memo(() => {
         setIsLoading(false);
       }
     },
-    [router, lastToastMessage, isFormValid]
+    [router, lastToastMessage, isFormValid, locale]
   );
 
   const toastStyles = {

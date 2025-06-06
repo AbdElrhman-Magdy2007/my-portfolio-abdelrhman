@@ -136,6 +136,7 @@ export default function SignInPage() {
   };
 
   const createSparkle = (x: number, y: number) => {
+    if (typeof window === 'undefined') return; // Skip if not in browser
     const id = Date.now();
     setSparkles((prev) => [...prev, { id, x: x + Math.random() * 8 - 4, y: y + Math.random() * 8 - 4 }]);
     setTimeout(() => setSparkles((prev) => prev.filter((s) => s.id !== id)), 600);
@@ -168,7 +169,7 @@ export default function SignInPage() {
           className="text-center text-slate-300 text-sm sm:text-base mt-8"
           variants={childVariants}
         >
-          Don’t have an account?{' '}
+          Don't have an account?{' '}
           <span className="sparkle-container relative inline-block">
             <Link
               href={`/${Routes.AUTH}/${Pages.Register}`}

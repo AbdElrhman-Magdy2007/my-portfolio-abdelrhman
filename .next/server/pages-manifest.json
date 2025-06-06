@@ -1,13 +1,13 @@
 {
-  "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
+  "/_app": "pages/_app.js",
   "/AddProject": "pages/AddProject.js",
   "/Index": "pages/Index.js",
-  "/Projects": "pages/Projects.js",
-  "/Settingsss": "pages/Settingsss.js",
   "/NotFound": "pages/NotFound.js",
-  "/SignUppp": "pages/SignUppp.js",
+  "/Settingsss": "pages/Settingsss.js",
   "/Profile": "pages/Profile.js",
   "/SignInnn": "pages/SignInnn.js",
+  "/Projects": "pages/Projects.js",
+  "/SignUppp": "pages/SignUppp.js",
   "/_document": "pages/_document.js"
 }

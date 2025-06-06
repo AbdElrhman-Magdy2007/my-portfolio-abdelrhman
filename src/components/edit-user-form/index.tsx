@@ -5,7 +5,6 @@ import useFormFields from "@/hooks/useFormFields";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { UserRole } from "@prisma/client";
 import { useActionState, useEffect, useState, useCallback, startTransition } from "react";
 import { updateProfile } from "./_actions/profile";
 import { CameraIcon, Loader } from "lucide-react";
@@ -17,6 +16,7 @@ import { motion } from "framer-motion";
 import clsx from "clsx";
 import { IFormField } from "@/app/types/app";
 import { ValidationError } from "@/app/validations/auth";
+import { ChangeEvent } from "react";
 
 // Type for form state management
 interface FormState {
@@ -26,11 +26,17 @@ interface FormState {
   formData?: FormData;
 }
 
+enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN"
+}
+
 function EditUserForm({ user }: { user: Session["user"] }) {
   const { data: session, update } = useSession();
   const [selectedImage, setSelectedImage] = useState(user.image ?? "");
   const [isAdmin, setIsAdmin] = useState(user.role === UserRole.ADMIN);
   const [lastToastMessage, setLastToastMessage] = useState<string | null>(null); // Track last toast message
+  const [sparkles, setSparkles] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
   const formData = useCallback(() => {
     const data = new FormData();
@@ -112,6 +118,13 @@ function EditUserForm({ user }: { user: Session["user"] }) {
     });
   }, [action, lastToastMessage]);
 
+  const createSparkle = (x: number, y: number) => {
+    if (typeof window === 'undefined') return;
+    const id = Date.now();
+    setSparkles((prev) => [...prev, { id, x: x + Math.random() * 8 - 4, y: y + Math.random() * 8 - 4 }]);
+    setTimeout(() => setSparkles((prev) => prev.filter((s) => s.id !== id)), 600);
+  };
+
   return (
     <motion.form
       onSubmit={handleSubmit}
@@ -173,6 +186,8 @@ function EditUserForm({ user }: { user: Session["user"] }) {
               <FormFields
                 {...field}
                 type={field.type as InputTypes}
+                pattern={field.pattern ?? ""}
+                ariaLabel={field.ariaLabel ?? ""}
                 defaultValue={fieldValue as string}
                 error={state?.error?.[field.name]?.join(', ')}
                 readonly={field.type === InputTypes.EMAIL}

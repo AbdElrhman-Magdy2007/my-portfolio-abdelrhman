@@ -1,0 +1,18 @@
+{
+  "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
+  "/api/upload/route": "/api/upload",
+  "/_not-found/page": "/_not-found",
+  "/auth/signin/page": "/auth/signin",
+  "/page": "/",
+  "/auth/signup/page": "/auth/signup",
+  "/profile/page": "/profile",
+  "/projects/page": "/projects",
+  "/settings/page": "/settings",
+  "/admin/page": "/admin",
+  "/admin/menu-items/new/page": "/admin/menu-items/new",
+  "/admin/categories/page": "/admin/categories",
+  "/admin/menu-items/page": "/admin/menu-items",
+  "/admin/users/page": "/admin/users",
+  "/admin/users/[userId]/edit/page": "/admin/users/[userId]/edit",
+  "/admin/menu-items/[productId]/edit/page": "/admin/menu-items/[productId]/edit"
+}

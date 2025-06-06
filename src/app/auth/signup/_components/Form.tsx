@@ -217,13 +217,16 @@ function RegisterForm() {
                       : state.error[field.name] as unknown as string
                     : undefined
                 }
-                defaultValue={fieldValue as string | undefined}
+                value={fieldValue as string}
                 disabled={pending}
+                pattern={field.pattern ?? ""}
+                options={field.options}
                 className={clsx(
                   'w-full p-3 rounded-lg bg-slate-900/50 border border-slate-700',
                   'text-slate-300 placeholder-slate-500 focus:ring-2 focus:ring-blue-400',
                   'transition-all duration-200 hover:shadow-md hover:shadow-blue-400/20'
                 )}
+                ariaLabel={field.ariaLabel ?? ""}
               />
               <motion.div
                 className="absolute inset-0 pointer-events-none"

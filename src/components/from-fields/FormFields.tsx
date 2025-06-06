@@ -1,6 +1,8 @@
 import React from "react";
 import { ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
+import { clsx } from "clsx";
+import { IFormField } from "@/app/types/app";
 
 // Define supported input types
 type InputTypes =
@@ -19,45 +21,28 @@ type InputTypes =
   | "hidden"
   | "number"; // Include number to support numeric inputs
 
-interface Props {
-  type: InputTypes;
-  name: string;
-  label: string;
+interface Props extends Omit<IFormField, 'defaultValue'> {
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   error?: string;
-  value: string;
-  defaultValue?: string;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
-  placeholder?: string;
-  required?: boolean;
-  options?: { value: string; label: string }[]; // For select or radio
-  className?: string;
-  disabled?: boolean;
-  min?: number;
-  max?: number;
-  step?: number;
-  pattern?: string;
-  ariaLabel?: string;
 }
 
-const FormFields: React.FC<Props> = ({
+const FormFields = ({
   type,
-  name,
   label,
-  error,
-  value,
-  defaultValue,
-  onChange,
   placeholder,
-  required,
-  options,
-  className,
-  disabled,
-  min,
-  max,
-  step,
-  pattern,
+  error,
+  value = '',
+  onChange = () => {},
+  disabled = false,
+  className = '',
   ariaLabel,
-}) => {
+  pattern,
+  required = false,
+  autoFocus = false,
+  name,
+  options = [],
+}: Props) => {
   const inputProps = {
     id: name,
     name,
@@ -65,24 +50,24 @@ const FormFields: React.FC<Props> = ({
     onChange,
     placeholder,
     required,
-    className: cn(
-      "form-input",
-      error ? "border-red-500" : "",
+    className: clsx(
+      'w-full p-3 rounded-lg bg-slate-900/50 border border-slate-700',
+      'text-slate-300 placeholder-slate-500 focus:ring-2 focus:ring-blue-400',
+      'transition-all duration-200 hover:shadow-md hover:shadow-blue-400/20',
+      error ? 'border-red-500' : 'border-slate-700',
       className
     ),
     disabled,
-    min,
-    max,
-    step,
-    pattern,
-    "aria-label": ariaLabel || label,
-    "aria-invalid": !!error,
-    "aria-describedby": error ? `${name}-error` : undefined,
+    'aria-label': ariaLabel || label,
+    'aria-invalid': !!error,
+    'aria-describedby': error ? `${name}-error` : undefined,
+    autoFocus,
+    ...(pattern ? { pattern } : {}),
   };
 
   return (
-    <div className="form-group">
-      <label htmlFor={name} className="form-label text-indigo-300 font-medium text-sm">
+    <div className="space-y-2">
+      <label htmlFor={name} className="block text-sm font-medium text-slate-300">
         {label}
       </label>
       {type === "textarea" ? (
@@ -122,12 +107,8 @@ const FormFields: React.FC<Props> = ({
         <input type={type} {...inputProps} />
       )}
       {error && (
-        <p
-          id={`${name}-error`}
-          className="text-sm text-red-400 font-medium mt-1 flex items-center gap-2 bg-red-500/10 border border-red-500/30 rounded-lg p-2"
-          aria-live="polite"
-        >
-          <span className="text-red-400">⚠</span> {error}
+        <p id={`${name}-error`} className="mt-1 text-sm text-red-500">
+          {error}
         </p>
       )}
     </div>

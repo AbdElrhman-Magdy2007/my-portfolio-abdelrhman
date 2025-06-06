@@ -866,6 +866,19 @@ const AddProductAddons = ({
   );
 };
 
+interface EditProductFormProps {
+  product: ProductWithRelations;
+}
+
+export function EditProductForm({ product }: EditProductFormProps) {
+  return (
+    <div>
+      <h1>Edit Product: {product.name}</h1>
+      {/* Form implementation goes here */}
+    </div>
+  );
+}
+
 export default Form;
 export { UploadImage, FormActions, AddProductTech, AddProductAddons };
 

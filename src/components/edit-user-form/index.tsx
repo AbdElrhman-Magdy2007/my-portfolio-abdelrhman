@@ -56,15 +56,17 @@ function EditUserForm({ user }: { user: Session["user"] }) {
     formData: formData(),
   };
 
-  const [state, formAction] = useFormState(
-    async (prevState, formData) => {
-      // ... form action logic ...
+  const [state, formAction, isPending] = useFormState<FormState, FormData>(
+    async (prevState: FormState, formData: FormData): Promise<FormState> => {
+      const result = await updateProfile(isAdmin, prevState, formData);
+      return {
+        ...prevState,
+        ...result,
+        formData
+      };
     },
-    {
-      message: '',
-      status: 0,
-      error: undefined
-    }
+    initialState,
+    '/profile'
   );
   const { getFormFields } = useFormFields({
     slug: Routes.PROFILE,
@@ -72,7 +74,7 @@ function EditUserForm({ user }: { user: Session["user"] }) {
 
   // Handle toast and session updates
   useEffect(() => {
-    if (state.message && typeof state.status === "number" && !formAction.pending && state.message !== lastToastMessage) {
+    if (state.message && typeof state.status === "number" && !isPending && state.message !== lastToastMessage) {
       toast.dismiss("profile-update-loading"); // Dismiss loading toast
       const isSuccess = state.status === 200;
       toast[isSuccess ? "success" : "error"](state.message, {
@@ -97,7 +99,7 @@ function EditUserForm({ user }: { user: Session["user"] }) {
         });
       }
     }
-  }, [formAction.pending, state.message, state.status, session, update, isAdmin, selectedImage, lastToastMessage]);
+  }, [isPending, state.message, state.status, session, update, isAdmin, selectedImage, lastToastMessage]);
 
   useEffect(() => {
     setSelectedImage(user.image ?? "");
@@ -198,7 +200,7 @@ function EditUserForm({ user }: { user: Session["user"] }) {
                 defaultValue={fieldValue as string}
                 error={state?.error?.[field.name]?.join(', ')}
                 readonly={field.type === InputTypes.EMAIL}
-                disabled={formAction.pending}
+                disabled={isPending}
               />
             </motion.div>
           );
@@ -241,13 +243,13 @@ function EditUserForm({ user }: { user: Session["user"] }) {
         >
           <Button
             type="submit"
-            disabled={formAction.pending}
+            disabled={isPending}
             className={clsx(
               "w-full bg-indigo-700 hover:bg-indigo-700 text-black font-bold py-2 px-4 rounded-lg transition-all",
-              formAction.pending && "opacity-50 cursor-not-allowed flex items-center justify-center gap-2"
+              isPending && "opacity-50 cursor-not-allowed flex items-center justify-center gap-2"
             )}
           >
-            {formAction.pending ? (
+            {isPending ? (
               <>
                 <Loader className="w-5 h-5" />
                 <span>Saving...</span>
